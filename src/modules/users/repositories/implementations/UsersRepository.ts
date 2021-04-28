@@ -18,46 +18,42 @@ class UsersRepository implements IUsersRepository {
     return UsersRepository.INSTANCE;
   }
 
-  create({ name, email }: ICreateUserDTO): void {
+  create({ name, email }: ICreateUserDTO): User {
     const user = new User();
 
     Object.assign(user, {
       name,
       email,
-      admin: false,
       created_at: new Date(),
+      updated_at: new Date(),
     });
 
     this.users.push(user);
-    console.log(user);
+    return user;
   }
 
   findById(id: string): User | undefined {
     const user = this.users.find((user) => user.id === id);
-    console.log(user);
 
     return user;
   }
 
   findByEmail(email: string): User | undefined {
     const userEmail = this.users.find((user) => user.email === email);
-    console.log(userEmail);
     return userEmail;
   }
 
-  turnAdmin({ id }: User): void {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new Error("User is not found.");
-    }
+  turnAdmin(receivedUser: User): User {
+    const user = receivedUser;
 
     user.admin = true;
     user.updated_at = new Date();
+
+    return user;
   }
 
   list(): User[] {
     const allUsers = this.users;
-    console.log(allUsers);
     return allUsers;
   }
 }
