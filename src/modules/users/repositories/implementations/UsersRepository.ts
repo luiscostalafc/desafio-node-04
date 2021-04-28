@@ -18,7 +18,7 @@ class UsersRepository implements IUsersRepository {
     return UsersRepository.INSTANCE;
   }
 
-  create({ name, email }: ICreateUserDTO): User | any {
+  create({ name, email }: ICreateUserDTO): void {
     const user = new User();
 
     Object.assign(user, {
@@ -29,30 +29,36 @@ class UsersRepository implements IUsersRepository {
     });
 
     this.users.push(user);
+    console.log(user);
   }
 
   findById(id: string): User | undefined {
     const user = this.users.find((user) => user.id === id);
+    console.log(user);
 
     return user;
   }
 
   findByEmail(email: string): User | undefined {
     const userEmail = this.users.find((user) => user.email === email);
+    console.log(userEmail);
     return userEmail;
   }
 
-  turnAdmin({ id }: User): User | any {
-    const userIsAdmin = this.users.find((user) => user.id === id);
-    Object.assign(userIsAdmin, {
-      admin: true,
-    });
+  turnAdmin({ id }: User): void {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) {
+      throw new Error("User is not found.");
+    }
 
-    this.users.push(userIsAdmin);
+    user.admin = true;
+    user.updated_at = new Date();
   }
 
   list(): User[] {
-    return this.users;
+    const allUsers = this.users;
+    console.log(allUsers);
+    return allUsers;
   }
 }
 

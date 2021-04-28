@@ -1,4 +1,3 @@
-import { User } from "../../model/User";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 
 interface IRequest {
@@ -8,8 +7,20 @@ interface IRequest {
 class ListAllUsersUseCase {
   constructor(private usersRepository: IUsersRepository) {}
 
-  execute({ user_id }: IRequest): User[] {
-    // Complete aqui
+  execute({ user_id }: IRequest): void {
+    const user = this.usersRepository.findById(user_id);
+
+    if (!user) {
+      throw new Error("User is not found");
+    }
+
+    const userIsAdmin = user.admin === true;
+
+    if (!userIsAdmin) {
+      throw new Error("User is not Admin");
+    }
+
+    this.usersRepository.list();
   }
 }
 
